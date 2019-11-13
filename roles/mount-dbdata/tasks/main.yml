@@ -1,0 +1,30 @@
+---
+- name: partition disk
+  parted:
+     device: /dev/sdb
+     number: 1
+     state: present
+
+- name: create fs
+  filesystem:
+     fstype: ext4
+     dev: /dev/sdb1
+
+- name: create /dbdata
+  file:
+    path: /dbdata
+    state: directory
+
+- name: create /dbdata/percona
+  file:
+    path: /dbdata/percona
+    state: directory
+    owner: docker
+    group: docker
+    
+- name: mount /dbdata
+  mount:
+    fstype: ext4
+    src: /dev/sdb1
+    path: /dbdata
+    state: mounted

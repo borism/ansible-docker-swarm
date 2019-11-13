@@ -5,6 +5,7 @@
     - create-sudo-user
     - install-modules
     - configure-hosts-file
+    - set-hostname
 
 - name: setup docker user on the nodes
   become: yes
@@ -34,3 +35,14 @@
   hosts: swarm-workers
   roles:
     - docker-swarm-add-worker
+
+- name: attach separate disk for db data
+  hosts: docker-nodes
+  roles:
+    - mount-dbdata
+
+- name: run percona on a swarm and create backup
+  hosts: swarm-manager
+  roles:
+    - deploy-percona
+    - deploy-mysql-backup-s3

@@ -1,0 +1,6 @@
+---
+- name: pull mysql-backup-s3 image
+  shell: docker pull schickling/mysql-backup-s3
+
+- name: create mysql-backup-s3 service
+  shell: docker service create --name percona-backup --secret mysql_root_password -e MYSQL_PASSWORD=/run/secrets/mysql_root_password 

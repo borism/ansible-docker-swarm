@@ -1,0 +1,12 @@
+---
+- name: create mysql root password
+  shell: echo s3cr37 | docker secret create mysql_root_password -
+
+- name: create db_net
+  shell: docker network create -d overlay db_net
+
+- name: pull percona image
+  shell: docker pull percona/percona-server:5.7
+
+- name: create percona service
+  shell: docker service create --name percona --network=db_net --publish target=3606,published=3606 --secret mysql_root_password -e MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password --mount type=bind,source=/dbdata/percona,destination=/var/lib/mysql percona/percona-server:5.7
